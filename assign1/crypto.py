@@ -9,6 +9,7 @@ SUNet: maim2059
 
 Replace this with a description of the program.
 """
+
 import string
 import utils
 
@@ -26,8 +27,6 @@ def encrypt_caesar(plaintext):
         encode += j
 
     return encode 
-        
-    raise NotImplementedError  # Your implementation here
 
 def decrypt_caesar(ciphertext):
     decode = ""
@@ -41,26 +40,136 @@ def decrypt_caesar(ciphertext):
         decode += j
 
     return decode
-    raise NotImplementedError  # Your implementation here
-
 
 # Vigenere Cipher
 
 def encrypt_vigenere(plaintext, keyword):
-    """Encrypt plaintext using a Vigenere cipher with a keyword.
-
-    Add more implementation details here.
-    """
-    raise NotImplementedError  # Your implementation here
-
+    encode = ''
+    k = 0
+    maxl = len(keyword)
+    for i in plaintext:
+        j = chr(ord(i) + ord(keyword[k]) - ord('A'))
+        if j > 'Z':
+            j = chr(ord(j) - 26)
+        encode += j
+        k +=1
+        if(k>=maxl):
+            k = 0
+    
+    return encode
 
 def decrypt_vigenere(ciphertext, keyword):
-    """Decrypt ciphertext using a Vigenere cipher with a keyword.
+    decode = ''
+    k = 0
+    maxl = len(keyword)
+    for i in ciphertext:
+        j = chr(ord(i) - ord(keyword[k]) + ord('A'))
+        if j < 'A':
+            j = chr(ord(j) + 26)
+        decode += j
+        k +=1
+        if(k>=maxl):
+            k = 0
+    
+    return decode
 
-    Add more implementation details here.
-    """
-    raise NotImplementedError  # Your implementation here
+#scytale cipher
 
+def encrypt_scytal(plaintext, circumference):
+    encode = ''
+    l = len(plaintext)
+    for i in range(0,circumference):
+        j = i
+        while j < l:
+            encode += plaintext[j]
+            j += circumference
+    
+    return encode
+
+def decrypt_scytal(ciphertext, circumference):
+    decode = ''
+    l = len(ciphertext)
+    div = l//circumference
+    mod = l%circumference
+    for i in range(0,div):
+        j = i
+        k = 0
+        while j < l:
+            decode += ciphertext[j]
+            if k < mod:
+                j += div + 1
+            else:
+                j += div
+            k += 1
+    
+    i = div
+    for j in range(0,mod):
+        decode += ciphertext[i]
+        i += div
+    
+    return decode
+
+#railfence cipher
+
+def encrypt_railfence(plaintext, num_rails):
+    encode = ''
+    l = len(plaintext)
+    matrix = [['\n' for _ in range(l)] for _ in range(num_rails)]
+
+    down = -1
+    r, c = 0, 0
+
+    for i in range(l):
+        if r == 0 or r == num_rails - 1:
+            down *= -1
+        matrix[r][c] = plaintext[i]
+        c += 1
+        r += down
+
+    for i in range(num_rails):
+        for j in range(c):
+            if matrix[i][j] != '\n':
+                encode += matrix[i][j]
+    
+    return encode   
+
+def decrypt_railfence(ciphertext, num_rails):
+    decode = ''
+    l = len(ciphertext)
+    
+    matrix = [['\n' for _ in range(l)] for _ in range(num_rails)]
+
+    down = -1
+    r, c = 0, 0
+
+    for i in range(l):
+        if r == 0 or r == num_rails - 1:
+            down *= -1
+        matrix[r][c] = 'a'
+        c += 1
+        r += down
+
+    k = 0
+    for i in range(num_rails):
+        for j in range(c):
+            if matrix[i][j] == 'a':
+                matrix[i][j] = ciphertext[k]
+                k += 1
+
+    down = -1
+    r, c = 0, 0
+    for i in range(l):
+        if r == 0 or r == num_rails - 1:
+            down *= -1
+        decode += matrix[r][c]
+        c += 1
+        r += down
+
+    return decode
+
+a =encrypt_railfence("defend the east walll", 3)
+print(a)
+print(decrypt_railfence(a,3))
 
 # Merkle-Hellman Knapsack Cryptosystem
 

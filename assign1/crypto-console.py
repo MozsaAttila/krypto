@@ -11,6 +11,8 @@ import random
 
 from crypto import (encrypt_caesar, decrypt_caesar,
                     encrypt_vigenere, decrypt_vigenere,
+                    encrypt_scytal, decrypt_scytal,
+                    encrypt_railfence, decrypt_railfence,
                     generate_private_key, create_public_key,
                     encrypt_mh, decrypt_mh)
 
@@ -21,7 +23,7 @@ from crypto import (encrypt_caesar, decrypt_caesar,
 
 def get_tool():
     print("* Tool *")
-    return _get_selection("(C)aesar, (V)igenere or (M)erkle-Hellman? ", "CVM")
+    return _get_selection("(C)aesar, (V)igenere, (S)cytale, (R)ailfence or (M)erkle-Hellman? ", "CVMSR")
 
 
 def get_action():
@@ -102,6 +104,12 @@ def clean_caesar(text):
 def clean_vigenere(text):
     return ''.join(ch for ch in text.upper() if ch.isupper())
 
+def clean_scytal(text):
+    return text
+
+def clean_railfence(text):
+    return text
+
 
 def run_caesar():
     action = get_action()
@@ -128,6 +136,34 @@ def run_vigenere():
 
     output = (encrypt_vigenere if encrypting else decrypt_vigenere)(data, keyword)
 
+    set_output(output)
+
+def run_scytal():
+    action = get_action()
+    encrypting = action == 'E'
+    data = clean_scytal(get_input(binary=False))
+
+    print("* Transform *")
+    keyword = int(input("circumference? "))
+
+    print("{}crypting {} using scytale cipher and circumference {}...".format('En' if encrypting else 'De', data, chr(keyword)))
+
+    output = (encrypt_scytal if encrypting else decrypt_scytal)(data, keyword)
+    
+    set_output(output)
+
+def run_railfence():
+    action = get_action()
+    encrypting = action == 'E'
+    data = clean_scytal(get_input(binary=False))
+
+    print("* Transform *")
+    keyword = int(input("number of rails? "))
+
+    print("{}crypting {} using scytale cipher and circumference {}...".format('En' if encrypting else 'De', data, chr(keyword)))
+
+    output = (encrypt_railfence if encrypting else decrypt_railfence)(data, keyword)
+    
     set_output(output)
 
 
@@ -175,7 +211,9 @@ def run_suite():
     commands = {
         'C': run_caesar,         # Caesar Cipher
         'V': run_vigenere,       # Vigenere Cipher
-        'M': run_merkle_hellman  # Merkle-Hellman Knapsack Cryptosystem
+        'M': run_merkle_hellman,  # Merkle-Hellman Knapsack Cryptosystem
+        'S': run_scytal,
+        'R': run_railfence
     }
     commands[tool]()
 
