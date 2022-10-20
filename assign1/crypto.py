@@ -4,28 +4,43 @@ File: crypto.py
 ---------------
 Assignment 1: Cryptography
 Course: CS 41
-Name: <YOUR NAME>
-SUNet: <SUNet ID>
+Name: Mozsa Attila
+SUNet: maim2059
 
 Replace this with a description of the program.
 """
+import string
 import utils
 
 # Caesar Cipher
 
 def encrypt_caesar(plaintext):
-    """Encrypt plaintext using a Caesar cipher.
+    encode = ""
+    for i in plaintext:
+        if "A" <= i and i <= "Z":
+            j = chr(ord(i) + 3)
+            if j > 'Z':
+                j = chr(ord(j) - 26)
+        else:
+            j = i
+        encode += j
 
-    Add more implementation details here.
-    """
+    return encode 
+        
     raise NotImplementedError  # Your implementation here
 
-
 def decrypt_caesar(ciphertext):
-    """Decrypt a ciphertext using a Caesar cipher.
+    decode = ""
+    for i in ciphertext:
+        if "A" <= i and i <= "Z":
+            j = chr(ord(i) - 3)
+            if j < 'A':
+                j = chr(ord(j) + 26)
+        else:
+            j = i
+        decode += j
 
-    Add more implementation details here.
-    """
+    return decode
     raise NotImplementedError  # Your implementation here
 
 
