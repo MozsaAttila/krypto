@@ -10,6 +10,7 @@ If you are a student, you shouldn't need to change anything in this file.
 import random
 
 from crypto import (encrypt_caesar, decrypt_caesar,
+                    encrypt_caesar_NonText, decrypt_caesar_NonText,
                     encrypt_vigenere, decrypt_vigenere,
                     encrypt_scytal, decrypt_scytal,
                     encrypt_railfence, decrypt_railfence,
@@ -23,7 +24,7 @@ from crypto import (encrypt_caesar, decrypt_caesar,
 
 def get_tool():
     print("* Tool *")
-    return _get_selection("(C)aesar, (V)igenere, (S)cytale, (R)ailfence or (M)erkle-Hellman? ", "CVMSR")
+    return _get_selection("(C)aesar, (N)onText, (V)igenere, (S)cytale, (R)ailfence or (M)erkle-Hellman? ", "CNVMSR")
 
 
 def get_action():
@@ -71,7 +72,7 @@ def set_output(output, binary=False):
         with open(filename, flags) as outfile:
             print("Writing data to {}...".format(filename))
             outfile.write(output)
-
+# C:\Users\Attila\Desktop\bluemereg.png
 
 def _get_selection(prompt, options):
     choice = input(prompt).upper()
@@ -116,13 +117,27 @@ def run_caesar():
     encrypting = action == 'E'
     data = clean_caesar(get_input(binary=False))
 
+    if len(data) == 0 or not data.isupper() or not data.isalpha():
+        print("Incorrect input!")
+    else:
+        print("* Transform *")
+        print("{}crypting {} using Caesar cipher...".format('En' if encrypting else 'De', data))
+
+        output = (encrypt_caesar if encrypting else decrypt_caesar)(data)
+
+        set_output(output)
+
+def run_caesar_nonText():
+    action = get_action()
+    encrypting = action == 'E'
+    data = get_input(binary=True)
+
     print("* Transform *")
-    print("{}crypting {} using Caesar cipher...".format('En' if encrypting else 'De', data))
+    print("{}crypting using Caesar cipher...".format('En' if encrypting else 'De'))
 
-    output = (encrypt_caesar if encrypting else decrypt_caesar)(data)
+    output = (encrypt_caesar_NonText if encrypting else decrypt_caesar_NonText)(data)
 
-    set_output(output)
-
+    set_output(output,binary = True)
 
 def run_vigenere():
     action = get_action()
@@ -132,11 +147,14 @@ def run_vigenere():
     print("* Transform *")
     keyword = clean_vigenere(input("Keyword? "))
 
-    print("{}crypting {} using Vigenere cipher and keyword {}...".format('En' if encrypting else 'De', data, keyword))
+    if not data.isalpha() or not keyword.isalpha() or not data.isupper() or not keyword.isupper() or len(data) == 0 or len(keyword) == 0:
+        print("Incorrect input!")
+    else:
+        print("{}crypting {} using Vigenere cipher and keyword {}...".format('En' if encrypting else 'De', data, keyword))
 
-    output = (encrypt_vigenere if encrypting else decrypt_vigenere)(data, keyword)
+        output = (encrypt_vigenere if encrypting else decrypt_vigenere)(data, keyword)
 
-    set_output(output)
+        set_output(output)
 
 def run_scytal():
     action = get_action()
@@ -210,6 +228,7 @@ def run_suite():
     # but I thought it was too cool to not sneak in here!
     commands = {
         'C': run_caesar,         # Caesar Cipher
+        'N':run_caesar_nonText,
         'V': run_vigenere,       # Vigenere Cipher
         'M': run_merkle_hellman,  # Merkle-Hellman Knapsack Cryptosystem
         'S': run_scytal,

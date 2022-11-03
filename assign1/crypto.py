@@ -13,9 +13,13 @@ Replace this with a description of the program.
 import string
 import utils
 
+
 # Caesar Cipher
 
 def encrypt_caesar(plaintext):
+    if len(plaintext) == 0 or (not plaintext.isupper()):
+        return 'not supported format for input!'
+
     encode = ""
     for i in plaintext:
         if "A" <= i and i <= "Z":
@@ -27,6 +31,26 @@ def encrypt_caesar(plaintext):
         encode += j
 
     return encode 
+
+def encrypt_caesar_NonText(plaintext):
+    encode  =  bytearray()
+    for i in plaintext:
+        j_num = i + 3
+        if j_num > 255:
+            j_num = j_num - 256
+        encode+=j_num.to_bytes(1, 'big')
+
+    return encode 
+
+def decrypt_caesar_NonText(ciphertext):
+    decode = bytearray()
+    for i in ciphertext:
+        j_num = i - 3
+        if j_num < 0:
+            j_num = j_num + 256
+        decode += j_num.to_bytes(1, 'big')
+
+    return decode
 
 def decrypt_caesar(ciphertext):
     decode = ""
@@ -72,6 +96,22 @@ def decrypt_vigenere(ciphertext, keyword):
             k = 0
     
     return decode
+
+from langdetect import detect
+def attack_vigenere(ciphertext):
+    f = open('D:\\UBB\\V.felev\\kripto\\words')
+    words = f.readlines()
+    f.close()
+    for word in words:
+        word2 = word.split('\'')[0]
+        print(word2)
+        decrypted = decrypt_vigenere(ciphertext,word2)
+        #if detect(decrypted) == 'en':
+            #print(decrypted)
+
+#f = open('D:\\UBB\\V.felev\\kripto\\lab1\\krypto\\assign1\\not_a_secret_message.txt')
+#text = f.readlines()[-1]
+#attack_vigenere(text)
 
 #scytale cipher
 
@@ -167,9 +207,6 @@ def decrypt_railfence(ciphertext, num_rails):
 
     return decode
 
-a =encrypt_railfence("defend the east walll", 3)
-print(a)
-print(decrypt_railfence(a,3))
 
 # Merkle-Hellman Knapsack Cryptosystem
 
