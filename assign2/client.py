@@ -37,6 +37,7 @@ def threadRead():
 with open(str(Path(__file__).parent) + "\\config2.txt", "r") as text:
       f = text.readlines()
 text.close()
+
 type = f[0]
 if "solitaire" in type:
   key = [int(i) for i in f[1].split(" ")]
